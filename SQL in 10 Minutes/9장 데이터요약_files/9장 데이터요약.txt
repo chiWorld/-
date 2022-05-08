@@ -1,0 +1,80 @@
+-- 1) AVG : 평균을 구하는 함수
+
+-- Products 테이블에 있는 제품의 평균값 구하기
+SELECT AVG(prod_price) AS avg_price FROM Products;
+
+-- DLL01이란 제품의 제품 가격의 평균값 구하기
+SELECT AVG(prod_price) AS avg_price FROM Products WHERE vend_id = 'DLL01';
+
+
+-- 2) COUNT : 행의 개수를 세는 함수. COUNT(*), COUNT(열 이름)으로 사용할 수 있음. COUNT(열 이름)사용시 NULL값은 무시됨
+
+-- Customers 테이블에 있는 고객의 수 
+SELECT COUNT(*) AS num_cust FROM Customers;
+
+-- 이메일 주소가 있는 고객만 세기
+SELECT COUNT(cust_email) AS num_email_cust FROM Customers;
+
+
+-- 3) MAX : 지정한 열에서 가장 큰 값 반환. NULL값을 가진 행은 무시함. 문자열 데이터에 MAX사용시 열에서 가장 마지막에 있는 행을 반환함.
+
+-- Products 테이블에서 가장 비싼 제품의 가격
+SELECT MAX(prod_price) AS max_price FROM Products;
+
+
+-- 4) MIN : 지정한 열에서 가장 작은 값을 반환. NULL값을 가진 행은 무시함. 문자열 데이터에서 MIN사용시 열에서 가장 처음에 있는 행을 반환함.
+
+-- prod_id를 ASC로 정렬했을 경우 prod_id에서 가장 첫번째에 있는 prod_id를 반환함
+SELECT MIN(prod_id) FROM Products ORDER BY prod_id;
+
+-- Products테이블에서 가장 저렴한 제품의 가격
+SELECT MIN(prod_price) AS min_price FROM Products;
+
+
+-- 5) SUM : 지정한 열의 합을 구함. NULL값 가진 행은 무시함
+
+-- OrderItems 테이블에 주문된 제품(20005)의 총 수량 가져오기
+SELECT SUM(quantity) AS item_ordered FROM OrderItems WHERE order_num = 20005;
+
+-- OrderItems 테이블의 주문된 제품(20005)의 총액(가격*수량) 구하기
+SELECT SUM(item_price*quantity) AS total_price FROM OrderItems WHERE order_num = 20005;
+
+
+-- 6) DISTINCT : 중복되는 값 제거
+-- COUNT(*)와 DISTINCT는 같이 사용할 수 없음. DISTINCT는 COUNT()에 열 이름이 지정된 경우에만 함께 사용할 수 있고, COUNT(*)와 함께 사용할 수 없음. 계산된 수식도 함께 사용할 수 없음.
+
+-- 지정한 판매처에서 제공한 제품의 평균값 구하기(중복제거)
+SELECT AVG(DISTINCT prod_price) AS avg_price FROM Products WHERE vend_id = 'DLL01';
+
+
+-- 7) 그룹 함수 결합하기
+
+-- Products테이블에 있는 총 제품의 수, 최소 가격, 최대 가격, 평균 가격 구하기
+SELECT COUNT(*) AS num_items
+     , MIN(prod_price) AS price_min
+     , MAX(prod_price) AS price_max
+     , TRUNC(AVG(prod_price), 3) AS price_avg
+FROM Products;
+
+
+-- * 도전과제
+-- 1) OrderItems에 있는 quantity열을 사용해 판매 수량의 총 합계를 구하는 SQL문 작성하기
+SELECT SUM(quantity) AS 총합계
+FROM OrderItems;
+
+-- 2) 방금 작성한 문장을 수정하여 BR01 항목의 총합계를 구하는 SQL문을 작성하라
+SELECT * FROM OrderItems WHERE prod_id = 'BR01';
+
+SELECT SUM(quantity) AS 총합계
+FROM OrderItems
+WHERE prod_id = 'BR01';
+
+
+-- 3) Products 테이블에서 가격이 10 또는 그 이하 중에서 가장 비싼 제품의 가격(prod_price)을 가져오는 SQL문을 작성하라. 계산된 필드를 max_price라고 하자.
+SELECT * FROM Products;
+SELECT MAX(prod_price) AS max_price
+FROM Products
+WHERE prod_price <= 10;
+
+
+
