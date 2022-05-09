@@ -1,0 +1,83 @@
+-- 연산자 : 절을 연결하거나 변경하기 위해 WHERE 절에서 사용하는 특별한 키워드. 논리 연산자라고도 함
+
+-- AND연산자
+-- 지정된 조건을 모두 충족하는 행을 가져오는 키워드
+SELECT prod_id, prod_price, prod_name 
+FROM Products 
+WHERE vend_id = 'DLL01' AND prod_price <= 4;
+
+
+--OR연산자
+-- 지정된 조건을 하나라도 만족하는 행을 가져오는 키워드
+SELECT prod_name, prod_price
+FROM Products
+WHERE vend_id = 'DLL01' OR vend_id = 'BRS01';
+
+
+-- 우선순위 이해하기
+SELECT prod_name, prod_price
+FROM Products
+WHERE vend_id = 'DLL01' OR vend_id = 'BRS01' AND prod_price >= 10; -- OR연산자보다 AND연산자의 우선순위가 높아 10달러 미만의 가격이 출력됨
+
+-- 위의 SQL문을 올바르게 고치면 아래와 같음
+SELECT prod_name, prod_price
+FROM Products
+WHERE (vend_id = 'DLL01' OR vend_id = 'BRS01') AND prod_price >= 10;
+
+
+-- IN연산자
+-- 조건의 범위를 지정할 때 사용함
+
+-- 판매처가 DLL01이거나 BRS01인 제품 이름과 제품 가격
+SELECT prod_name, prod_price
+FROM Products
+WHERE vend_id IN ('DLL01', 'BRS01')
+ORDER BY prod_name;
+
+-- 위의 SQL문은 OR연산자를 쓸 때와 완전히 같은 일을 수행함
+SELECT prod_name, prod_price
+FROM Products
+WHERE vend_id = 'DLL01' OR vend_id = 'BRS01'
+ORDER BY prod_name;
+
+
+-- IN연산자의 장점
+-- 1) 조건이 많을 때 IN문법이 훨씬 깔끔함
+-- 2) AND나 OR 연산자와 함께 사용할 때 연산자 우선순위를 관리하기 편함
+-- IN이 OR연산자보다 목록을 처리하는 속도가 빠름 (단, 조건이 몇 개 안되면 성능상 차이점을 발견하기 어려움
+
+
+-- NOT연산자
+-- 조건을 부정하기 위해 사용하는 키워드
+-- MariaDB에서 IN, BETWEEN, EXISTS절에서 NOT을 사용함
+SELECT prod_name
+FROM Products
+WHERE NOT vend_id = 'DLL01'
+ORDER BY prod_name;
+
+SELECT prod_name
+FROM Products
+WHERE vend_id <> 'DLL01'
+ORDER BY prod_name;
+
+
+-- 도전 과제
+-- 1) Vendors 테이블에서 캘리포니아에 있는 판매처의 이름을 가져오는 SQL문을 작성하시오
+SELECT * FROM Vendors;
+
+SELECT vend_name 
+FROM Vendors
+WHERE vend_country = 'USA' AND vend_state = 'CA';
+
+-- 2) BR01, BR02, BR03항목이 최소 100개 이상인 모든 주문 목록을 찾는 SQL문을 작성하시오
+SELECT * FROM OrderItems;
+
+SELECT order_num, prod_id, quantity
+FROM OrderItems
+WHERE prod_id IN ('BR01', 'BR02', 'BR03') AND quantity >= 100;
+
+-- 3) Products테이블에서 가격이 3이상, 6이하인 모든 제품의 제품명과 제품 가격을 가져오시오. AND를 꼭 사용하고 결과는 가격순으로 정렬할 것.
+SELECT prod_name, prod_price
+FROM Products
+WHERE 3 =< prod_price AND prod_price =< 6
+ORDER BY prod_price;

@@ -1,0 +1,59 @@
+1) SELECT문
+- 테이블에서 정보를 가져오기 위해 사용함
+
+
+SELECT prod_name FROM Products;
+
+SELECT prod_id, prod_name, prod_price FROM Products;
+
+SELECT * FROM Products;
+
+SELECT vend_id FROM Products;
+
+SELECT DISTINCT vend_id FROM Products;
+
+-- SELECT TOP 5 prod_name FROM Products; -- TOP키워드는 Microsoft SQL Server에서 사용가능. 행의 수를 총 5개로 제한해서 가져옴
+
+SELECT prod_name 
+FROM Products
+FETCH FIRST 5 ROWS ONLY; -- Db2에서 쓰는 방법. 위의 TOP함수와 같이 5개의 행을 가져옴
+
+SELECT prod_name
+FROM Products
+WHERE ROWNUM <=5;
+
+-- SELECT prod_name
+-- FROM Products
+-- LIMIT 5;         -- MySQL, MariaDB, PostgreSQL, SQLite를 사용할 때 상위 5개의 행을 가져오는 방법
+
+-- SELECT prod_name
+-- FROM Products
+-- LIMIT 4 OFFSET 3; -- 4번째 행부터 3개의 행을 가져오라고 지시한 것
+
+-- SELECT prod_name
+-- FROM Products
+-- LIMIT 3, 4; -- 콤마 앞이 OFFSET값, 콤마 뒤가 LIMIT로 단축해서 쓰면 순서가 반대
+
+SELECT prod_name --주석
+FROM Products;
+
+#이 줄은 주석이다
+SELECT prod_name
+FROM Products;
+
+/* 주석 */
+SELECT prod_name 
+FROM Products;
+
+
+-- 도전과제
+-- 1) Customers 테이블에서 모든 고객ID(cust_id)를 가져오는 SQL문을 작성하시오
+SELECT cust_id FROM Customers;
+
+-- 2) OrderItems 테이블에는 주문 목록을 모두 저장한다(일부는 여러 번 주문되었다.)
+--    주문한 제품 목록(prod_id)을 가져오는 SQL문을 작성하라. 결과로 7개의 행이 표시되어야 한다.
+SELECT DISTINCT prod_id FROM OrderItems;
+
+-- 3) Customers테이블에서 모든 열을 가져오는 SQL문을 작성하고, 고객 ID만 가져오는 SELECT문도 작성하라.
+SELECT * FROM Customers;
+SELECT cust_id FROM Customers;

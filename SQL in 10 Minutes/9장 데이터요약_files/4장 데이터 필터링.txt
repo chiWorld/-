@@ -1,0 +1,67 @@
+-- 필터링(Filtering) : 데이터베이스 질의를 통해 필요한 데이터만 걸러내는 작업
+
+SELECT prod_name, prod_price 
+FROM Products
+WHERE prod_price = 3.49;
+
+-- 하나의 값으로 확인하기
+SELECT prod_name, prod_price
+FROM Products
+WHERE prod_price < 10;
+
+SELECT prod_name, prod_price 
+FROM Products 
+WHERE prod_price <= 10;
+
+SELECT vend_id, prod_name
+FROM Products
+WHERE vend_id <> 'DLL01';
+
+SELECT vend_id, prod_name
+FROM Products
+WHERE vend_id != 'DLL01';
+
+-- 특정 범위의 값 확인하기
+SELECT prod_name, prod_price 
+FROM Products 
+WHERE prod_price BETWEEN 5 AND 10;
+
+-- 값이 없는 데이터 확인하기
+
+-- 결과 : no data found. null인 제품은 없기 때문에 아무것도 출력되지 않음.
+SELECT prod_name 
+FROM Products 
+WHERE prod_price IS NULL;
+
+-- 결과 : 이메일 주소가 null인 cust_name이 뜸
+SELECT cust_name
+FROM Customers
+WHERE cust_email IS NULL;
+
+
+-- 도전과제
+-- 1) Products테이블에서 제품의 가격이 9.49인 제품 ID(prod_id)와 제품명(prod_name)을 가져오는 SQL문을 작성하시오
+SELECT prod_id, prod_name
+FROM Products
+WHERE prod_price = 9.49;
+
+-- 2) Products테이블에서 제품의 가격이 9 또는 그 이상인 제품ID(prod_id)와 제품명(prod_name)을 가져오는 SQL문을 작성하시오
+SELECT prod_id, prod_name
+FROM Products
+WHERE prod_price >= 9;
+
+-- 3) OrderItems 테이블에서 제품 수량이 100개 이상인 항목을 검색하며 주문 번호(order_num)가 중복되지 않도록 SQL문을 작성하시오
+SELECT DISTINCT order_num, prod_id 
+FROM OrderItems
+WHERE quantity >= 100;
+
+-- 4) Products테이블에서 가격이 3과 6사이인 제품의 제품명과 제품가격을 모두 가져와 그 결과를 가격순으로 정렬하는 SQL문을 작성하시오.
+SELECT prod_name, prod_price 
+FROM Products 
+WHERE prod_price BETWEEN 3 AND 6
+ORDER BY prod_price;
+
+SELECT prod_name, prod_price
+FROM Products
+WHERE 3 < prod_price AND prod_price < 6
+ORDER BY prod_price;
