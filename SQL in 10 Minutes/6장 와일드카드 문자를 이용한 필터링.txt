@@ -1,0 +1,86 @@
+-- 와일드카드 : 여러 데이터에서 부분적으로 일치하는 값이 있는지 확인할 때 사용되는 특수문자
+-- 검색패턴 : 문자나 와일드카드 또는 이 두개의 조합으로 구성된 검색 조건
+-- LIKE 연산자 = 술어(predicate) : 문장 속에서 주어에 대해 진술하는 동사 이하 부분
+
+
+-- %와일드카드
+-- DBMS와 설정에 따라 검색어가 대소문자를 구분할 수 있음
+-- NULL인 행은 가져오지 않음
+-- 데이터의 후행 공백에 주의해야 함
+SELECT prod_id, prod_name
+FROM Products
+WHERE prod_name LIKE 'Fish%';
+
+SELECT prod_id, prod_name
+FROM Products
+WHERE prod_name LIKE '%bean bag%';
+
+SELECT prod_name
+FROM Products
+WHERE prod_name LIKE 'F%y';
+
+
+-- _와일드카드
+-- 단 한 개의 문자를 대신함. Db2에서는 지원되지 않음
+SELECT prod_id, prod_name 
+FROM Products
+WHERE prod_name LIKE '__ inch teddy bear%';
+
+SELECT prod_id, prod_name
+FROM Products
+WHERE prod_name LIKE '% inch teddy bear%';
+
+
+-- 집합( [] ) 와일드카드
+-- 문자들을 하나의 집합으로 지정해 사용함
+-- Microsoft SQL Server에서만 지원함
+
+-- J나 M으로 시작하는 연락처 찾기
+SELECT cust_contact
+FROM Customers
+WHERE cust_contact LIKE '[JM]%'
+ORDER BY cust_contact;
+
+-- J나 M으로 시작하지 않는 연락처 찾기
+SELECT cust_contact
+FROM Customers
+WHERE cust_contact LIKE '[^JM]%'
+ORDER BY cust_contact;
+
+SELECT cust_contact
+FROM Customers
+WHERE NOT cust_contact LIKE '[JM]%'
+ORDER BY cust_contact;
+
+
+-- 와일드카드 사용팁
+/*
+    1) 와일드카드를 남용해서는 안됨. 다른 검색 연산자를 이용해서 검색이 가능하다면 그것을 이용해야함
+    2) 꼭 필요한 경우가 아니라면 검색 패턴 시작에 와일드카드를 사용하지 말아야함. 와일드카드로 시작하는 검색 패턴은 처리가 가장 느림
+    3) 와일드카드 기호의 위치 선정에 주의해야함. 만약 와일드카드를 잘못된 곳에 사용하면 의도한 것과 다른 데이터가 검색됨
+*/
+
+
+-- 도전과제
+-- 1) Products테이블에서 설명(prod_desc)에 toy가 들어간 제품의 제품명(prod_name)과 설명을 가져오는 SQL문을 작성하시오
+SELECT prod_name, prod_desc
+FROM Products
+WHERE prod_desc LIKE '%toy%';
+
+-- 2) Products테이블의 설명에 toy가 들어가지 않은 제품명과 설명을 가져오는 SQL문을 작성하고, 결과를 제품명으로 정렬하기
+SELECT prod_name, prod_desc
+FROM Products
+WHERE NOT prod_desc LIKE '%toy%'
+ORDER BY prod_name;
+
+-- 3) Products 테이블에서 설명에 toy와 carrots이 함께 들어간 제품의 제품명과 설명을 가져오는 SQL문을 작성하시오. (AND와 2개의 LIKE 연산자 이용하기)
+SELECT prod_name, prod_desc
+FROM Products
+WHERE prod_desc LIKE '%toy%' AND prod_desc LIKE '%carrots%';
+
+-- 4) Products 테이블에서 설명에 toy와 carrots이 순서대로 함께 들어간 제품의 제품명과 설명을 가져오는 SQL문을 작성하시오.
+SELECT prod_name, prod_desc
+FROM Products
+WHERE prod_desc LIKE '%toy%carrots%';
+
+
