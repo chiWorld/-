@@ -1,0 +1,67 @@
+-- 필드(field) : 기본적으로 열과 같은 뜻이지만 데이터베이스 열은 일반적으로 열(Column)이라고 부르며, 필드는 계산 필드와 함께 사용됨
+
+-- 필드연결하기 : 한 개의 긴 값을 만들기 위해 여러 개의 값을 합치는 것
+-- SQL Server : + 기호 사용
+SELECT vend_name + ' (' + vend_country + ')'
+FROM Vendors
+ORDER BY vend_name;
+
+-- DB2, Oracle, PostgreSQL, SQLite : || 기호 사용
+SELECT vend_name || ' (' || vend_country || ')'
+FROM Vendors
+ORDER BY vend_name;
+
+-- MySQL, MariaDB
+SELECT Concat(vend_name, ' (', vend_country, ')')
+FROM Vendors
+ORDER BY vend_name;
+
+-- RTRIM : 오른쪽 공백제거
+SELECT RTRIM(vend_name) || ' (' || RTRIM(vend_country) || ')'
+FROM Vendors
+ORDER BY vend_name;
+
+
+-- 별칭(alias = 파생열(derived column)) 사용하기
+-- 별칭을 붙이면 클라이언트 프로그램에서 이 이름을 이용해 실제 테이블 열처럼 열을 참조할 수 있음
+SELECT RTRIM(vend_name) || ' (' || RTRIM(vend_country) || ')' AS vend_title
+FROM Vendors
+ORDER BY vend_name;
+
+
+-- 수학 계산 수행하기
+SELECT prod_id, quantity, item_price
+FROM OrderItems
+WHERE order_num = 20008;
+
+SELECT prod_id
+     , quantity
+     , item_price
+     , quantity*item_price AS expanded_price
+FROM OrderItems
+WHERE order_num = 20008;
+
+
+-- 계산 결과 테스트를 위해 FROM절을 생략하고 SELECT절을 사용할 수 있음
+SELECT 3*2;
+SELECT TRIM('   abc   ');
+SELECT Curdate(); --MariaDB, MySQL에서 현재 날짜와 시간을 가져옴
+
+
+-- 도전과제
+-- 1) Vendors 테이블에서 vend_id, vend_name, vend_address, vend_city를 가져와 각각의 필드를 vname, vcity, vaddress로 이름을 바꾸고,
+--    그 결과를 판매처명으로 정렬하는 SQL문을 작성하시오
+SELECT vend_id
+     , RTRIM(vend_name) AS vname
+     , RTRIM(vend_address) AS vaddress
+     , RTRIM(vend_city) AS vcity
+FROM Vendors
+ORDER BY vend_name;
+
+-- 2) 우리가 예제로 사용하는 가게는 전 상품을 10% 세일하고 있다.
+--    Products 테이블에서 prod_id, prod_price, sale_price를 가져오는 SQL문을 작성하라.
+SELECT prod_id
+     , prod_price
+     , (prod_price * 0.9) AS sale_price
+FROM Products;
+
