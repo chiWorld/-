@@ -1,0 +1,123 @@
+-- 데이터 그룹핑
+SELECT COUNT(*) AS num_prods
+FROM Products
+WHERE vend_id = 'DLL01';
+
+-- 각 판매처의 제품 수 구하기
+SELECT vend_id                  -- 제품 판매처 ID
+     , COUNT(*) AS num_prods    -- 계산필드 : vend_id가 나올때마다 num_prods를 증가시킴
+FROM Products
+GROUP BY vend_id;   --vend_id로 그룹핑하고 데이터를 정렬해!
+
+/* 
+    GROUP BY절을 사용하면 자동으로 각 그룹에 대해 계싼하기 때문에 계산할 그룹을 따로 명시할 필요가 없음
+    GROUP BY절에는 원하는 만큼 열을 써서 중첩그룹을 만들 수 있게 함
+    GROUP BY절은 가변형 길이의 데이터형은 사용할 수 없음
+    그룹핑해야 하는 열의 행에 null값이 있어도 그룹으로 가져옴. 여러 행이 null값을 가진다면 모두 함께 그룹핑됨
+*/
+
+-- 그룹 필터링
+SELECT cust_id 
+     , COUNT(*) AS orders
+FROM Orders
+GROUP BY cust_id
+HAVING COUNT(*) >= 2; -- 여기서 WHERE을 사용하면 ORA-00933:SQL command not properly ended 에러가 발생함
+
+
+/*
+    * HAVING vs WHERE
+    - HAVING절은 데이터가 그룹핑된 후에 필터링                                   / WHERE절은 데이터가 그룹핑 되기 전에 필터링
+    - HAVUNG절에서는 그룹이 변경된 값으로 필터링하기 때문에 필터링 결과에 영향줌 / WHERE절에서 필터링 되어 제거된 행은 그룹에 포함되지 않음
+*/
+
+-- 가격이 4달러 이상인 제품을 두 개 이상 가진 판매처 가져오기
+SELECT vend_id
+     , COUNT(*) AS num_prods
+FROM Products
+WHERE prod_price >= 4 
+GROUP BY vend_id    
+HAVING COUNT(*) >= 2;
+
+SELECT * FROM Products
+WHERE prod_price >= 4;
+
+
+/*
+    ORDER BY                                            GROUP BY
+    - 결과를 정렬함                                     - 행을 그룹핑함. 결과는 그룹 순서대로 출력되지 않음
+    - 어떤 열이라도 (가져오지 않은 열도) 사용 가능      - 선택된 열이나 수식만 사용가능. 선택된 열이나 수식을 꼭 사용해야 함
+    - 필수 항목 아님                                    - 그룹 함수와 함께 사용하는 열이 있을 경우 필수 항목
+    
+    
+    * GROUP BY절을 사용해 데이터를 그룹핑했을 때 항상 그룹 순서대로 정렬되는 것은 아님. 정렬을 할 때는 ORDER BY절을 사용할것
+*/
+
+
+-- 세 개 이상의 제품을 주문한 경우, 주문 번호와 주문 수량을 가져옴
+SELECT order_num
+     , COUNT(*) AS items
+FROM OrderItems
+GROUP BY order_num   -- GROUP BY로 묶어주지 않으면 ORA-00937 : not a single-group group function 에러 생김
+HAVING COUNT(*) >= 3;
+
+-- 위의 결과를 항목 수로 정렬하기
+SELECT order_num
+    , COUNT(*) AS items
+FROM OrderItems
+GROUP BY order_num
+HAVING COUNT(*) >= 3
+ORDER BY items, order_num;
+
+
+/*
+    SELECT문 순서
+    
+    SELECT      가져올 열이나 수식      필수
+    FROM        데이터를 가져올 테이블  테이블에서 데이터를 가져올 때 사용
+    WHERE       행 레벨 필터링          NO
+    GROUP BY    그룹 지정               그룹핑한 데이터로 집계 계산을 할 때 사용
+    HAVING      그룹 레벨 필터링        NO
+    ORDER BY    정렬 순서               NO
+*/
+
+
+-- 도전과제
+-- 1) OrderItems 테이블은 각각의 주문에 대한 개별 항목을 포함하고 있다. 
+--    주문 번호(Order_num)에 해당하는 줄 수를 order_lines라고 표시하고, 결과를 order_lines로 정렬하는 SQL문을 작성.
+
+SELECT * FROM OrderItems;
+
+SELECT order_num
+     , COUNT(*) AS order_lines
+FROM OrderItems
+GROUP BY order_num
+ORDER BY order_lines;
+
+
+-- 2) Products테이블에 있는 prod_price를 사용하여, 각 판매처에서 취급하는 가장 저렴한 항목을 cheapest_item이라고 이름짓고,
+--    가격순(최저가에서 최고가)으로 정렬하는 SQL문을 작성.
+SELECT * FROM Products;
+
+SELECT vend_id
+     , MIN(prod_price) AS cheapest_item
+FROM Products
+GROUP BY vend_id
+ORDER BY cheapest_item;
+
+-- 3) 100개 이상의 항목을 주문한 주문번호를 가져오는 SQL문 작성
+SELECT * FROM OrderItems;
+
+SELECT order_num
+FROM OrderItems
+GROUP BY order_num 
+HAVING SUM(quantity) >= 100
+ORDER BY order_num;
+
+-- 4) 주문액의 합이 1000 이상인 모든 주문의 주문번호를 가져와 주문번호로 정렬
+SELECT order_num
+     , TRUNC(SUM(quantity * item_price), 0) AS total_price
+FROM OrderItems
+GROUP BY order_num
+HAVING SUM(quantity*item_price) > = 1000
+ORDER BY order_num;
+
