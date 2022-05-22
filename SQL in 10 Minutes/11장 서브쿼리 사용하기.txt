@@ -1,0 +1,110 @@
+-- 1) 서브쿼리로 필터링하기
+--      - 서브쿼리는 하나의 열만 검색할 수 있음. 여러 개의 열을 검색하면 에러 발생
+
+-- RGAN01을 주문한 주문번호 가져오기
+SELECT order_num
+FROM OrderItems
+WHERE prod_id = 'RGAN01';
+
+-- 주문번호와 관련있는 고객 ID 가져오기
+SELECT cust_id
+FROM Orders
+WHERE order_num IN (20007, 20008);
+
+-- 위의 select문 합치기
+-- 서브쿼리는 안에 있는 쿼리를 먼저 처리하고 그 다음 바깥쪽에 있는 쿼리 처리함
+-- 20007, 20008이라는 주문번호가 반환된 후 이 값이 바깥에 where절로 전달됨. 각각의 값은 in 연산자 사용때처럼 콤마로 구분되어 전달됨
+SELECT cust_id
+FROM Orders
+WHERE order_num IN (SELECT order_num FROM OrderItems WHERE prod_id = 'RGAN01');
+
+-- 고객 ID로 각 고객의 정보 가져오기
+SELECT cust_name, cust_contact
+FROM Customers
+WHERE cust_id IN (1000000004, 1000000005);
+
+-- 위의 3가지 문장 합치기
+-- 가장 안쪽 서브쿼리에서 주문 번호 가져오고, 두번째 서브쿼리에서 고객 ID를 가져오고, 가장 바깥 쿼리가 실제 원하는 데이터 가져옴
+SELECT cust_name, cust_contact
+FROM Customers
+WHERE cust_id IN (SELECT cust_id 
+                    FROM Orders
+                   WHERE order_num IN (SELECT order_num
+                                         FROM OrderItems
+                                        WHERE prod_id = 'RGAN01'));
+
+
+-- 2) 계산 필드로 서브쿼리 사용하기
+
+-- cust id가 1000000001인 고객이 주문한 수를 세기
+SELECT COUNT(*) AS orders
+FROM Orders
+WHERE cust_id = 1000000001;
+
+-- Customers테이블에서 고객 이름, 주소, 주문 수량 가져오기
+SELECT cust_name
+     , cust_state
+     , (SELECT COUNT(*)
+        FROM Orders
+       WHERE Orders.cust_id = Customers.cust_id) AS orders -- 완전한 열 이름(Fully Quanlified Column Name)사용. 미사용시 Orders테이블에 있는 주문의 총 수량 가져옴
+FROM Customers
+ORDER BY cust_name;
+
+
+-- 도전과제
+-- 1) 서브쿼리를 사용하여 10 또는 그 이상의 가격으로 제품을 구매한 고객ID 반환
+
+SELECT * FROM OrderItems;
+SELECT * FROM Orders;
+
+SELECT cust_id
+FROM Orders
+WHERE order_num IN (SELECT order_num
+                     FROM OrderItems
+                     WHERE item_price >= 10);
+ 
+-- 2) BR01제품이 주문된 날짜 구하기
+
+SELECT cust_id
+     , order_date
+FROM Orders
+WHERE order_num IN (SELECT order_num
+                      FROM OrderItems
+                     WHERE prod_id = 'BR01')
+ORDER BY order_date;
+
+-- 3) prod_id가 BR01인 제품을 구매한 모든 고객의 이메일 주소 가져오기
+SELECT cust_id
+     , cust_email
+  FROM Customers
+WHERE cust_id IN (
+                    SELECT cust_id
+                    FROM Orders
+                    WHERE order_num IN (SELECT order_num
+                                          FROM OrderItems 
+                                         WHERE prod_id = 'BR01')
+);
+
+-- 4) 고객ID(Orders테이블)와 서브쿼리를 사용해 각각의 고객에 대한 총주문량을 total_ordered로 가져오고, 그 결과를 가장 큰 수에서 적은순서로 정렬하시오
+SELECT * FROM Orders;
+SELECT * FROM OrderItems;
+
+SELECT cust_id
+     , (SELECT SUM(quantity*item_price)
+          FROM OrderItems
+         WHERE OrderItems.order_num = Orders.order_num) AS total_ordered
+  FROM Orders
+ORDER BY total_ordered DESC, cust_id;
+
+-- 5) Products테이블에서 모든 prod_name과 quant_sold(판매된 항목의 총수량)를 가져오는 SQL문 작성하시오
+SELECT * FROM Products;
+SELECT * FROM OrderItems;
+
+SELECT prod_name
+     , (SELECT SUM(quantity)
+          FROM OrderItems
+         WHERE OrderItems.prod_id = Products.prod_id) AS quant_sold
+FROM Products
+ORDER BY quant_sold DESC;
+
+
