@@ -1,0 +1,149 @@
+/*
+    1) 조인을 사용하는 이유
+    - 데이터가 여러 개의 테이블에 저장된 경우 하나의 SELECT문으로 원하는 데이터를 가져오기 위해서 사용
+    - 조인은 각 테이블에서 적절한 행을 서로 연결하는 역할을 함
+    - 조인은 물리적인 객체(entity)가 아님 = DB 테이블에 실제 존재하지 않음
+*/
+
+-- 2) 조인 생성하기
+
+SELECT RTRIM(vend_name)
+     , RTRIM(prod_name)
+     , prod_price
+FROM Vendors, Products
+WHERE Vendors.vend_id = Products.vend_id; -- 완전한 열 이름으로 두 테이블을 Join함 = 동등 조인 = 이퀴 조인(Equi-Join)
+
+
+-- 3) WHERE절의 중요성 : 두 개 테이블을 join할 때 가장 먼저 첫번째 테이블 행과 두번째 테이블을 행으로 짝을 지어야 함
+-- 카티전 곱(Cartesian Product) : 두 개 이상의 테이블에서 연결 가능한 행을 모두 결합하는 조인 방법. 조건절을 생략하거나 조건을 잘못 설정했을 때 발생함
+SELECT vend_name
+     , prod_name
+     , prod_price
+FROM Vendors, Products;
+-- 위의 쿼리 검색 시 모든 판매처와 모든 제품을 연결하여 조회되는데, 판매처가 일치하지 않고, 제품이 없는 판매처도 가져옴
+-- 카티전 곱이 발생하면 DBMS 속도가 현저히 느려질 수 있으니 주의할 것
+-- 카티전 곱이 반환하는 조입 타입을 상호조인(Cross Join)이라고 함
+
+
+-- 4) 내부 조인(Inner Join) : 두 개의 테이블에 있는 공통 열의 값이 같은 것을 결과로 가져옴. ANSI SQL권장 문법
+SELECT vend_name
+     , RTRIM(prod_name)
+     , prod_price
+FROM Vendors 
+INNER JOIN Products
+        ON Vendors.vend_id = Products.vend_id; --조인 조건 지정
+
+
+-- 5) 여러 개의 테이블 조인 : 많은 테이블을 조인할수록 성능 저하됨. SQL자체는 조인 테이블 수 제한 없으나 DBMS가 제한을 둘 수 있음
+SELECT RTRIM(prod_name) AS Prod_name
+     , RTRIM(vend_name) AS vend_name
+     , prod_price
+     , quantity
+FROM OrderItems, Products, Vendors
+WHERE Products.vend_id = Vendors.vend_id
+  AND OrderItems.prod_id = Products.prod_id
+  AND order_num = 20007;
+
+SELECT cust_name
+     , cust_contact
+FROM Customers
+WHERE cust_id IN (SELECT cust_id
+                    FROM Orders
+                   WHERE order_num IN (SELECT order_num
+                                         FROM OrderItems
+                                        WHERE prod_id = 'RGAN01'));
+-- 위의 서브쿼리를 아래로 간단하게 조인할 수 있음!
+SELECT cust_name
+     , cust_contact
+FROM Customers, Orders, OrderItems
+WHERE Customers.cust_id = Orders.cust_id
+  AND OrderItems.order_num = Orders.order_num
+  AND prod_id = 'RGAN01';
+  
+
+-- 도전과제
+-- 1) Customers 테이블에서 cust_name과 Orders 테이블에서 order_num을 가져와 그 결과를 고객명, 주문 번호순으로 정렬하는 SQL문을 작성하시오
+SELECT * FROM Customers;
+SELECT * FROM Orders;
+
+--  이쿼조인
+SELECT cust_name
+     , order_num
+FROM Customers, Orders
+WHERE Customers.cust_id = Orders.cust_id
+ORDER BY cust_name, order_num;
+
+--  내부조인
+SELECT cust_name
+     , order_num
+FROM Customers tb1
+INNER JOIN Orders tb2
+        ON tb1.cust_id = tb2.cust_id
+ORDER BY cust_name, order_num;
+
+
+-- 2) cust_name, order_num 외 orderTotal(주문의 총가격)이라는 세번째 열 추가하기
+SELECT * FROM Customers;
+SELECT * FROM Orders;
+SELECT * FROM OrderItems;
+
+-- OrderItems 테이블에서 서브쿼리를 사용해 OrderTotal열 생성하기
+SELECT RTRIM(Customers.cust_name)
+     , Orders.order_num
+     , (SELECT SUM(quantity*item_price) 
+          FROM OrderItems WHERE OrderItems.order_num = Orders.order_num) AS orderTotal
+FROM Orders, Customers
+WHERE Orders.cust_id = Customers.cust_id
+ORDER BY cust_name, order_num;
+
+-- 기존 테이블에 OrderItems 테이블 조인한 다음 그룹 함수 사용
+SELECT RTRIM(tb1.cust_name)
+     , tb2.order_num
+     , SUM(tb3.quantity*tb3.item_price) AS orderTotal
+FROM Customers tb1
+INNER JOIN Orders tb2
+        ON tb1.cust_id = tb2.cust_id
+INNER JOIN OrderItems tb3
+        ON tb2.order_num = tb3.order_num
+        GROUP BY tb1.cust_name, tb2.order_num;
+
+-- 3) cust_id와 고객이 주문한 총주문량을 total_ordered로 가져오고 결과를 가장 큰 수부터 적은 순서대로 정렬
+SELECT RTRIM(tb1.cust_name)
+     , SUM(tb3.quantity*tb3.item_price) AS total_ordered
+FROM Customers tb1
+INNER JOIN Orders tb2
+        ON tb1.cust_id = tb2.cust_id
+INNER JOIN OrderItems tb3
+        ON tb2.order_num = tb3.order_num
+        GROUP BY tb1.cust_name, tb2.order_num
+        ORDER BY total_ordered DESC;
+        
+-- 4) OrderItems 테이블에서 주문액의 합이 100이상인 모든 주문의 order_num, Customers 테이블에서 cust_name를 가져와 주문번호로 정렬하는 SQL문 작성
+
+-- 이퀴조인
+SELECT cust_name
+     , SUM(quantity*item_price) AS total_price
+FROM Customers
+    , Orders
+    , ORderItems
+WHERE Customers.cust_id = Orders.cust_id
+AND Orders.order_num = OrderItems.order_num
+GROUP BY cust_name
+HAVING SUM(quantity*item_price) >= 1000
+ORDER BY cust_name;
+
+
+-- ANSI내부조인
+SELECT tb1.cust_name
+     , SUM(tb3.item_price*tb3.quantity) AS total_price
+FROM Customers tb1
+INNER JOIN Orders tb2
+        ON tb1.cust_id = tb2.cust_id
+INNER JOIN OrderItems tb3
+        ON tb2.order_num = tb3.order_num
+GROUP BY tb1.cust_name
+HAVING SUM(tb3.item_price*tb3.quantity) >= 1000
+ORDER BY tb1.cust_name;
+
+
+
