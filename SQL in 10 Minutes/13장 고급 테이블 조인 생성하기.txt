@@ -1,0 +1,157 @@
+-- 테이블 별칭 사용하기
+-- -사용하는 SQL 명령문의 수를 줄이기 위해
+-- -하나의 SELECT문 내에서 같은 테이블을 여러 번 사용하기 위해
+SELECT RTRIM(vend_name) || ' (' || RTRIM(vend_country) || ')' AS vend_title
+FROM Vendors
+ORDER BY vend_name;
+
+SELECT * FROM Customers;
+SELECT * FROM Orders;
+SELECT * FROM OrderItems;
+
+-- Oracle에서는 테이블 별칭을 붙일 때 AS 키워드를 지원하지 않음.
+-- 테이블 별칭은 쿼리가 수행되는 동안에만 사용할 수 있음
+SELECT C.cust_name
+     , C.cust_contact
+ FROM Customers C, Orders O, OrderItems OI
+WHERE C.cust_id = O.cust_id
+  AND OI.order_num = O.order_num
+  AND OI.prod_id = 'RGAN01';
+
+
+-- 셀프 조인(Self Join) : 테이블 자기 자신을 참조하여 합침
+
+-- Jim Jones라는 사람과 같은 회사에서 일하는 모든 직원 찾기
+SELECT cust_id
+     , cust_name
+     , cust_contact
+FROM Customers
+WHERE cust_name = (SELECT cust_name
+                     FROM Customers
+                    WHERE cust_contact = 'Jim Jones');
+
+SELECT c1.cust_id
+     , c1.cust_name
+     , c1.cust_contact
+FROM Customers c1, Customers c2
+WHERE c1.cust_name = c2.cust_name
+  AND c2.cust_contact = 'Jim Jones'; -- 서브쿼리보다 셀프 조인이 빠름. 만약 1개의 값만 가져온다면 서브쿼리가 낫지만, 1개 이상은 조인을 쓰는 것이 성능에 좋음.
+  
+ 
+-- 자연 조인(Natural Join) : 중복열 제거함
+-- 모든 내부 조인 = 자연 조인. 자연 조인이 아닌 내부 조인은 평생 만들일이 없을 것....
+SELECT c.*
+     , o.order_num
+     , o.order_Date
+     , oi.prod_id
+     , oi.quantity
+     , oi.item_price
+FROM Customers c, Orders o, OrderItems oi
+WHERE c.cust_id = o.cust_id
+  AND oi.order_num = o.order_num
+  AND prod_id = 'RGAN01';
+  
+-- 외부 조인(Outer Join) : 관련되지 않은 행을 포함할 때 사용
+SELECT c.cust_id
+     , o.order_num
+FROM Customers c 
+INNER JOIN Orders o
+        ON c.cust_id = o.cust_id;
+-- 위는 두 테이블 교집합 데이터만 출력, 아래는 모든 cust_id에 해당하는 행이 출력됨
+SELECT c.cust_id
+     , o.order_num
+FROM Customers c
+LEFT OUTER JOIN Orders o -- LEFT : 왼쪽에 있는 테이블 의미. FROM절 왼쪽에 있는 테이블의 모든 행을 가져옴.
+             ON c.cust_id = o.cust_id;
+
+SELECT c.cust_id
+     , o.order_num
+FROM Customers c
+RIGHT OUTER JOIN Orders o -- SQLite는 오른쪽 외부 조인 지원하지 않음
+             ON c.cust_id = o.cust_id;
+
+-- 전체 외부 조인 : 두 개의 테이블에서 모든 행을 가져오고 관련된 행은 연결함
+SELECT c.cust_id
+     , o.order_num
+FROM Customers c
+FULL OUTER JOIN Orders o
+             ON c.cust_id = o.cust_id;
+
+
+-- 그룹 함수와 조인 사용하기
+SELECT c.cust_id
+     , COUNT(o.order_num) AS num_ord
+FROM Customers c 
+INNER JOIN Orders o
+        ON c.cust_id = o.cust_id
+GROUP BY c.cust_id
+ORDER BY c.cust_id;
+
+-- 위의 SQL문에서 주문한적 없는 고객까지 포함시키기
+SELECT c.cust_id
+     , COUNT(o.order_num) AS num_ord
+FROM Customers c
+LEFT OUTER JOIN Orders o
+             ON c.cust_id = o.cust_id
+GROUP BY c.cust_id;
+
+
+/*
+    * 조인과 조인 조건 올바르게 사용하기
+    - 사용할 조인 유형을 신중하게 결정하기
+    - 정확히 어떤 조인 문법을 지원하는지 확인하려면 DBMS 메뉴얼 참고하기
+    - 올바른 조인 조건 쓰는 건지 확인하기
+    - 조인조건 쓰는 것 잊지 말기(카티전 곱 결과 주의)
+    - 하나의 조인에 여러 개 테이블 포함 할때는 각각 조인을 따로따로 테스트 할 것
+*/
+
+-- 도전과제
+-- 1)
+SELECT c.cust_name
+     , o.order_num
+FROM Customers c
+INNER JOIN Orders o
+        ON c.cust_id = o.cust_id;
+        
+-- 2)
+SELECT c.cust_name
+     , o.order_num
+FROM Customers c
+LEFT OUTER JOIN Orders o
+        ON c.cust_id = o.cust_id;
+
+-- 3)
+SELECT * FROM Products;
+SELECT * FROM OrderItems;
+
+SELECT p.prod_name
+     , oi.order_num
+FROM Products p
+INNER JOIN OrderItems oi
+        ON p.prod_id = oi.prod_id;
+        
+-- 4)
+SELECT RTRIM(tb1.prod_name) AS prod_name
+     , tb2.order_num
+     , SUM(tb2.quantity*tb2.item_price) AS total_order_num
+FROM Products tb1
+JOIN OrderItems tb2
+        ON tb1.prod_id = tb2.prod_id
+GROUP BY tb1.prod_name, tb2.order_num;
+
+-- 5)
+SELECT * FROM Vendors;
+SELECT * FROM Products;
+
+     
+SELECT COUNT(vend_id) AS prod_num
+FROM Products
+GROUP BY vend_id;
+
+SELECT tb1.vend_id
+     , COUNT(tb2.vend_id) AS prod_num
+FROM Vendors tb1
+LEFT OUTER JOIN Products tb2
+             ON tb1.vend_id = tb2.vend_id
+GROUP BY tb1.vend_id;
+
