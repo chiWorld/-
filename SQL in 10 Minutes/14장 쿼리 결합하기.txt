@@ -1,0 +1,132 @@
+/*
+    * 결합 쿼리 이해하기
+    - 집합(Union)쿼리, 복합(Compound)쿼리 : 여러 쿼리를 수행하여 하나의 결과로 가져오는 것
+    - 여러 테이블에 있는 비슷한 구조의 데이터를 하나의 쿼리로 가져오는 경우
+    - 한 개의 테이블에서 여러 개의 쿼리를 수행하고, 하나의 결과로 가져오는 경우
+    -> 즉 여러 개의 WHERE조건이 있는 SELECT문은 결합 쿼리로 만들 수 있다.
+*/
+
+-- 1) UNION 사용하기
+SELECT cust_name
+     , cust_contact
+     , cust_email
+FROM Customers
+WHERE cust_state IN ('IL', 'IN', 'MI');
+
+SELECT cust_name
+     , cust_contact
+     , cust_email
+FROM Customers
+WHERE cust_name = 'Fun4All';
+
+SELECT cust_name
+     , cust_contact
+     , cust_email
+FROM Customers
+WHERE cust_state IN ('IL', 'IN', 'MI')
+UNION -- 두 개의 SELECT문이 실행한 결과를 하나로 합친다.
+SELECT cust_name
+     , cust_contact
+     , cust_email
+FROM Customers
+WHERE cust_name = 'Fun4All';
+
+
+SELECT cust_name
+     , cust_contact
+     , cust_email
+FROM Customers
+WHERE cust_state IN ('IL', 'IN', 'MI')
+OR cust_name = 'Fun4All';
+
+
+/*
+    * UNION제한
+    - 표준 SQL은 UNION으로 결합하는 SELECT문의 수에 제한을 두지 않지만 DBMS가 개수를 제한하는지 살펴보는게 좋음
+    - 좋은 DBMS는 내부적으로 쿼리 최적화기를 사용하지만, 기대하는 것 만큼 작업을 해내지 못하기 때문에 직접 테스트해서 확인하는 것이 좋음
+*/
+
+
+/*
+    * UNION 규칙
+    
+    - UNION은 반드시 두 개 이상의 SELECT문으로 구성. 각각의 명령문은 UNION이라는 키워드로 구분함
+      (만일 네 개의 SELECT문이 있다면 UNION키워드는 세 개가 됨)
+      
+    - UNION에서 각 쿼리는 같은 열이나 수식, 그룹 함수를 가져야 함 (일부 DBMS는 심지어 열 순서까지 맞춰야 함)
+    
+    - 열 데이터형은 호환될 수 있음. 정확히 같은 데이터형일 필요는 없지만, DBMS가 내부적으로 변환할 수 있어야 함
+      (예를 들어 다른 수치형이나 다른 날짜형)
+      
+    - UNION으로 결합한 SELECT문의 열 이름이 다르면 첫 번째 이름이 무조건 반환됨. 정렬 할 때도 그 이름만 사용 가능함
+*/
+
+
+-- 중복 행 포함하기와 제거하기 : UNION은 쿼리 결과에서 자동으로 중복 행을 제거함
+SELECT cust_name
+     , cust_contact
+     , cust_email
+FROM Customers
+WHERE cust_state IN ('IL', 'IN', 'MI')
+UNION ALL   -- 중복된 행을 제거하지 않음
+SELECT cust_name
+     , cust_contact
+     , cust_email
+FROM Customers
+WHERE cust_name = 'Fun4All';
+-- UNION ALL은 WHERE절에서 갖고 올 수 없는 결과를 반환함. 
+
+
+-- 결합 쿼리 결과 정렬하기
+SELECT cust_name
+     , cust_contact
+     , RTRIM(cust_email)
+FROM Customers
+WHERE cust_state IN ('IL', 'IN', 'MI')
+UNION
+SELECT cust_name
+     , cust_contact
+     , RTRIM(cust_email)
+FROM Customers
+WHERE cust_name = 'Fun4All'
+ORDER BY cust_name, cust_contact;
+
+
+/*
+    * UNION과 비슷한 유형 : 조인을 사용해도 같은 결과를 가져올 수 있어서 아래의 타입은 거의 사용하지 않음
+    - EXCEPT (MINUS로 불리는 경우도 있음) : 첫 번째 테이블에 있는 행을 가져올 때 사용
+    - INTERSECT : 두 개이 테이블에 모두 존재하는 행을 가져올 때 사용
+*/
+
+
+-- 도전과제
+-- 1)
+SELECT * FROM OrderItems;
+
+SELECT prod_id
+     , quantity
+FROM OrderItems
+WHERE prod_id LIKE 'BNBG%'
+UNION
+SELECT prod_id
+     , quantity
+FROM OrderItems
+WHERE quantity = 100
+ORDER BY prod_id;
+
+-- 2)
+SELECT prod_id
+     , quantity
+FROM OrderItems
+WHERE prod_id LIKE 'BNBG%'
+OR quantity = 100
+ORDER BY prod_id;
+
+-- 3)
+SELECT prod_name
+FROM Products
+UNION
+SELECT cust_name
+FROM Customers
+ORDER BY prod_name;
+
