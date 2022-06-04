@@ -11,7 +11,7 @@
 💻Lecture <br/>
 <a href="https://github.com/chiWorld/CAT_JJAL_MAKER">✨만들면서 배우는 리액트:기초 (진유림T)</a>
    
-<a href="https://github.com/chiWorld/CAT_JJAL_MAKER">✨비전공자를 위한 풀스택 맛집지도 만들기 프로젝트 (정지운T)</a>
+<a href="https://github.com/chiWorld/StudyRecord/tree/main/%EB%A7%9B%EC%A7%91%EC%A7%80%EB%8F%84%20%EA%B0%95%EC%9D%98%EC%9E%90%EB%A3%8C/day1">✨비전공자를 위한 풀스택 맛집지도 만들기 프로젝트 (정지운T)</a>
 
 <br/>
 <br/>
