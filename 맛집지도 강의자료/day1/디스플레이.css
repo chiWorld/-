@@ -1,0 +1,18 @@
+/* 
+    display: inline-block;
+
+    block처럼 박스 모델 개념을 사용할 수 있는데, 
+    인라인처럼 옆에 공간이 충분하면 그대로 옆에 등장시키겠다는 것
+*/
+
+/* div는 기본적으로 block이다. */
+div {
+    width: 100px;
+    display: inline-block;
+}
+
+/* 인라인은 박스모델이라는게 적용되지 않음 */
+span {
+    width: 100px;
+    display: block;
+}

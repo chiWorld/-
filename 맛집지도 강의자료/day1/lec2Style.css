@@ -1,0 +1,14 @@
+/* 이미 설정되어있는 부분을 최대한 무시하고 내가 원하는 대로 개발을 하겠다고 기본 설정 하는 것 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 10px;
+}
+
+h3 {
+    color: aqua;
+}

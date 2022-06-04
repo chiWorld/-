@@ -1,0 +1,20 @@
+* {
+    margin : 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/*
+    박스모델 지정 : border
+    padding : border와 콘텐츠 사이의 여백
+    margin : border 바깥의 여백
+*/
+div {
+    border: 1px solid balck;
+    padding : 10px;
+    margin : 10px;
+    width: 50%;
+    max-width: 300px;   /* 최대 넓이 */
+    min-width: 50px;    /* 최소 넓이 */  
+    height: 100px;
+}

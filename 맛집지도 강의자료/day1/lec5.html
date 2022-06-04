@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="동네코딩" />
+    <!-- description : 서비스에 대한 설명. 검색 했을 때 사이트 명 밑에 뜨는 설명으로 사용됨 -->
+    <meta name="description" content="맛집지도 서비스" />
+    <!-- keywords : 내 사이트와 관련된 키워드 -->
+    <meta
+        name="keywords"
+        content="동네코딩, 맛집지도, 유튜버맛집, 맛집유튜버"
+    />
+    <title>내 사이트</title>
+
+    <style>
+        h1 {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <h1>안녕하세요.</h1>
+
+    <!-- div -->
+    <div>안녕하세요. div</div>
+    <div>안녕하세요. div</div>
+
+    <!-- span -->
+    <span>span입니다.</span>
+    <span>span입니다.</span>
+
+    <div>안녕하세요. <span style="color: red;">홍길동</span>입니다.</div>
+
+    <!-- ul(순서 없음), ol(순서 있음) -->
+    <ul>
+        <li>1</li>
+        <li>2</li>
+        <li>3</li>
+    </ul>
+    <ol>
+        <li>1</li>
+        <li>2</li>
+        <li>3</li>
+    </ol>
+
+    <!-- h1~h6 -->
+    <h6>안녕</h6>
+
+    <!-- img  / src:이미지 경로 / alt:이미지 대체 텍스트 -->
+    <img src="" alt="" />
+
+    <!-- input : 입력태그 -->
+    <input type="text" />
+
+    <!-- button -->
+    <button>Click!</button>
+
+    <!-- a (앵커, anchor, 배에 있는 닻) -->
+    <a href="https://www.naver.com">네이버</a>
+
+    <script>
+        const tag = document.querySelector("h1");
+        tag.addEventListener("click", () => {
+            tag.style.color = "blue";
+        });
+    </script>
+</body>
+</html>

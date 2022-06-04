@@ -1,0 +1,28 @@
+h3 {
+    color: red;
+}
+
+/* css 우선순위 : id > class = attribute > tag */
+
+/* class 선택 */
+.blue {
+    color: blue;
+}
+
+/* ID 선택 */
+#green {
+    color: green;
+}
+
+/* 속성으로 선택 */
+[href="https://www.google.com"] {
+    background-color: red;
+}
+
+[href="https://www.naver.com"] {
+    background-color: blue;
+}
+
+p:hover {
+    background-color: black;
+}

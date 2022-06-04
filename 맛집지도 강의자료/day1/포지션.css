@@ -1,0 +1,41 @@
+/*
+    레이아웃 : 화면 구성(배치)
+*/
+div {
+    width: 100px;
+    height: 100px;
+    display: inline-block;
+    border: 1px solid black;
+}
+
+/* 
+    static : 기본 위치
+    relative : static에서 상대적인 위치로 이동
+    absolute : relative속성을 가진 가장 가까운 부모 태그를 기준으로 이동. 아니면 html 기준
+    fixed : 화면 자체를 기준으로 이동함
+    sticky : 네비게이션이 항상 그 자리에 있어서 스크롤을 해도 그자리에 붙어서 움직임
+*/
+#target {
+    background-color: yellow;
+    /* position: static; 원래 기본 자리에 있어라 */
+    /* position: relative; static에서 상대적인 위치로 이동함
+    left: 10px;
+    top: 10px; */
+    /* position: fixed;
+    bottom: 0; fixed에 bottom을 0으로 설정하면 해당 영역이 항상 바닥에 고정되어 있음 */
+    position: sticky;
+    top: 20px;
+}
+
+.container {
+    width: 400px;
+    height: 400px;
+    position: relative;
+}
+
+#target2 {
+    background-color: red;
+    position: absolute;
+    left: 30px;
+    top: 30px;
+}
