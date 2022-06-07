@@ -1,0 +1,23 @@
+/*
+    flex-direction: row; 교차축
+    flex-direction: column; 주축
+    justify-content : 정렬방식
+*/
+
+.container {
+    width: 350px;
+    height: 500px;
+    background-color: gray;
+    display: flex;
+    flex-direction: row;
+    /* justify-content: space-between; */
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.item {
+    width: 100px;
+    height: 100px;
+    background-color: red;
+    border: 1px solid black;
+}
