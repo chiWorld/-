@@ -1,0 +1,43 @@
+@import url('https://fonts.googleapis.com/css2?family=Gamja+Flower&display=swap');
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 10px;
+    font-family: 'Gamja Flower', cursive;
+}
+
+nav {
+    background-color: #e69a06;
+}
+
+.nav-container {
+    padding: 1rem 1rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav-title {
+    color: white;
+}
+
+.nav-contact {
+    color: white;
+    border: 0;
+    background: none;
+    cursor: pointer;
+    font-family: inherit; /* 폰트 상속 받겠다 */
+}
+
+@media all and (min-width: 1024px) {
+    .inner {
+        max-width: 1024px;
+        margin: 0 auto;
+    }
+}
