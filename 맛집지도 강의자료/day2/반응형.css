@@ -1,4 +1,5 @@
 /* max-width : 400px이하이면 display가 사라짐 */
+/* min-width : 400px이상일때 display가 사라짐 */
 @media all and (min-width: 400px) {
     h2 {
         display: none;
