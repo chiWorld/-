@@ -1,0 +1,83 @@
+-- 데이터 UPDATE
+-- 주의할점 : 꼭 WHERE 조건절을 사용할 것!
+
+UPDATE Customers
+SET cust_email = 'kim@thetoystore.com'  -- 열의 새로운 값 설정
+WHERE cust_id = 1000000005;
+
+SELECT * FROM Customers;
+
+INSERT INTO Customers (cust_id,
+                       cust_name,
+                       cust_address,
+                       cust_city,
+                       cust_state,
+                       cust_zip,
+                       cust_country)
+VALUES (1000000006,
+        'Toy Land',
+        '123 Any Street',
+        'New York',
+        'NY',
+        '11111',
+        'USA');
+        
+UPDATE Customers
+SET cust_contact = 'Sam Roberts',
+    cust_email = 'sam@toyland.com'
+WHERE cust_id = 1000000006;
+
+-- 업데이트 문에서도 서브쿼리 사용 가능함
+
+--열값을 삭제하려면 열에 NULL을 설정하면 됨 = 아무런 값도 가지지 않는다는 것을 의미 
+UPDATE Customers
+SET cust_email = NULL
+WHERE cust_id = 1000000005;
+
+
+-- 데이터 삭제 DELETE
+-- 주의사항 WHERE 조건절 누락하지 말기
+-- DELETE는 테이블 내용을 삭제하는 것이지 테이블을 삭제하는 것이 아님
+DELETE FROM Customers
+WHERE cust_id = 1000000006;
+
+SELECT * FROM Customers;
+
+/*
+    *외래 키
+    - 외래키를 이용해 DBMS 관계를 설정할 수 있음
+    - 외래 키는 참조 무결성을 위해 사용함
+    - 참조 무결성을 보장하기 위해 외래 키는 관계에 필요한 행을 삭제하지 못하도록 막음 = 에러가 발생하면서 해당 행은 삭제되지 않음
+    - 외래 키는 항상 정의하는 것이 좋음
+*/
+
+-- TRUN CATE TABLE을 사용하면 데이터 변경 기록이 남지 않아 테이블을 더 빠르게 삭제함
+
+/*
+    *UPDATE와 DELETE에 관한 가이드라인
+    - WHERE절 없이 절대 UPDATE와 DELETE 사용하지 않기
+    - 모든 테이블이 기본 키를 가졌는지 확인하기
+    - UPDATE와 DELETE 사용 전 SELECT문으로 테스트해서 올바른 행이 검색되는지 확인하기
+    - 데이터베이스 참조 무결성을 사용해야 DBMS가 함부로 삭제하지 못함
+    - 데이터베이스 관리자가 WHERE절 없이 UPDATE나 DELKETE를 수행할 수 없게 하기
+*/
+
+-- 도전과제
+-- 1)
+SELECT * FROM Vendors;
+
+CREATE TABLE VendorsCopy AS SELECT * FROM  Vendors;
+
+SELECT * FROM VendorsCopy;
+
+UPDATE VendorsCopy
+SET vend_state = UPPER(vend_state);
+
+SELECT * FROM Customers;
+
+UPDATE Customers
+SET cust_state = UPPER(cust_state);
+
+-- 2) 
+DELETE FROM Customers
+WHERE cust_id = 1000000006;

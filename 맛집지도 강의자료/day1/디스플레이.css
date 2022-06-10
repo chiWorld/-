@@ -1,6 +1,12 @@
 /* 
-    display: inline-block;
+    display: block;
+    박스모델이 적용되서 한 줄 모두 사용함
 
+    display: inline;
+    공간이 남으면 옆에 붙어 나옴
+    박스모델이 적용되지 않음
+
+    display: inline-block;
     block처럼 박스 모델 개념을 사용할 수 있는데, 
     인라인처럼 옆에 공간이 충분하면 그대로 옆에 등장시키겠다는 것
 */

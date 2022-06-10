@@ -11,9 +11,10 @@ div {
 /* 
     static : 기본 위치
     relative : static에서 상대적인 위치로 이동
-    absolute : relative속성을 가진 가장 가까운 부모 태그를 기준으로 이동. 아니면 html 기준
+    absolute : relative속성을 가진 가장 가까운 부모 태그를 기준으로 이동. 
+                아니면 body태그기준
     fixed : 화면 자체를 기준으로 이동함
-    sticky : 네비게이션이 항상 그 자리에 있어서 스크롤을 해도 그자리에 붙어서 움직임
+    sticky : 네비게이션이 항상 그 자리에 있 어서 스크롤을 해도 그자리에 붙어서 움직임 ex)교보문고 오른쪽 네비 바
 */
 #target {
     background-color: yellow;
