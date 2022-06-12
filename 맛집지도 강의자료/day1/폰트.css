@@ -9,6 +9,35 @@
 
 p {
     font-family: 'Yeongdo-Rg', cursive;
-    font-weight: 900; /* 글자 굵기 */
-    text-align: right; /* 글자 정렬 */
+    font-weight: 900; /* 글자 굵기 normal =400 / bold=700 / bolder 더 굵게 / lighter 더 얇게 */
+    text-align: right; /* 글자 수평 방향 정렬 */
 }
+
+/*
+    font-size : 폰트의 크기를 지정하는 속성
+    - rem, px, em, %
+    - xx-small, x-small, small
+    - medium
+    - large, x-large, xx-large
+*/
+
+/*
+    font-family : 글꼴을 지정하는 속성. 설정 글꼴이 없을 경우 generic-family로 지정 가능
+    generic family 속성
+    - serif : 삐침 있는 명조계열의 글꼴
+    - sans-serif : 삐침없고 굵기가 일정한 고딕계열의 글꼴
+    - monospace: 글자 폭과 간격이 일정한 글꼴
+    - cursive : 손으로 쓴 것 같은 필기계열의 글꼴
+    - fantasy : 화려한 글꼴
+*/
+
+/*
+    text-overflow : 문자열이 지정공간 벗어날 때 처리하는 속성
+    - clip : 자르기
+    - ellipsis : ...으로 표시
+    
+    사용 전 사전 조건
+    1. width 설정되어야 함
+    2. overflow:hidden 설정(컨텐츠가 블록 가릴 때 처리)
+    3. white-space: nowrap 설정(줄바꿈, 공백 처리)
+*/

@@ -1,3 +1,19 @@
+/*
+    Media Query : 화면 너비별로 다른 CSS를 적용할 수 있음
+
+    @media 타입 and (조건) {
+        css
+    }
+
+    - 타입 : 디바이스 종류 의미함 all, screen(브라우저 화면), print(프린트 할 때 화면)
+    - 조건 : 어떤 조건에 해당 미리어 쿼리를 적용할지 의미함
+            - max-width&min-width : 뷰포트 너비를 기준 최대/최소 너비
+            - orientation : 디바이스 방향(landscape, portrait)
+            - height : 뷰포트 높이
+            - device-width&device-height : 디바이스의 물리적 너비, 높이
+            - aspect-ratio : 뷰포트의 가로세로 비율
+*/
+
 /* max-width : 400px이하이면 display가 사라짐 */
 /* min-width : 400px이상일때 display가 사라짐 */
 @media all and (min-width: 400px) {
@@ -5,3 +21,17 @@
         display: none;
     }
 }
+
+/*
+    브레이크 포인트 : 어떤 조건에서 미디어쿼리를 적용할지 나타냄
+    4개의 브레이크 포인트
+        - 모바일 : ~480px
+        - 테블릿 : 481~767px
+        - 테블릿 가로 : 768~1023px
+        - 데스크탑: 1024px ~
+
+    3개의 브레이크 포인트
+        - 모바일, 테블릿 : ~768px
+        - 테블릿 : 769~1023px
+        - 데스크탑 : 1024px ~
+*/

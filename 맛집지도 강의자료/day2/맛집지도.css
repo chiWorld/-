@@ -9,7 +9,7 @@
 * {
     padding: 0;
     margin: 0;
-    box-sizing: border-box;
+    box-sizing: border-box; /* 이 설정을 하면 마진은 박스 높이에 포함이 안됌 */
 }
 
 html {
@@ -46,7 +46,7 @@ html {
     height: 5rem;
     background: none;
     border: none;
-    font-family: inherit;
+    font-family: inherit; /* 버튼 글꼴 상속 */
     font-size: 1.6rem;
 }
 
@@ -56,7 +56,7 @@ html {
 }
 
 .inner {
-    padding: 0 1.5rem;
+    padding: 0 1.5rem; /* 위아래로는 0, 양옆으로 1.5rem */
 }
 
 @media all and (min-width: 1024px) {
@@ -67,9 +67,8 @@ html {
 }
 
 /* 카카오맵 CSS */
-
 body {
-    height: 100vh;
+    height: 100vh; /*vue port height(vh) : 화면의 전체 높이를 body태그가 가져가겠다 */
 }
 
 nav {
@@ -78,13 +77,13 @@ nav {
 
 main {
     padding-top: 1.5rem;
-    height: calc(100% - 59px);
+    height: calc(100% - 59px); /* 부모의 100%에서 nav높이만큼 뺌 */
     display: flex;
     flex-direction: column;
 }
 
 #map {
-    flex-grow: 1;
+    flex-grow: 1; /* 다른 flex 아이템이 차지하고 난 나머지 자리를 모두 map이 사용하겠다 */
     width: 100%;
     height: 100%;
 }

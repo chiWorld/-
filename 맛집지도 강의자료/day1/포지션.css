@@ -9,13 +9,14 @@ div {
 }
 
 /* 
-    static : 기본 위치
-    relative : static에서 상대적인 위치로 이동
-    absolute : relative속성을 가진 가장 가까운 부모 태그를 기준으로 이동. 
-                아니면 body태그기준
-    fixed : 화면 자체를 기준으로 이동함
-    sticky : 네비게이션이 항상 그 자리에 있 어서 스크롤을 해도 그자리에 붙어서 움직임 ex)교보문고 오른쪽 네비 바
+    *position : 레이아웃 설정에 사용되는 속성
+    - static      기본 위치
+    - relative    static에서 상대적인 위치로 이동
+    - absolute    relative속성을 가진 가장 가까운 부모 태그(or body) 기준 이동
+    - fixed       화면(뷰포트) 자체를 기준으로 이동함
+    - sticky      스크롤 시에도 static위치 고정 ex)교보문고 오른쪽 네비 바
 */
+
 #target {
     background-color: yellow;
     /* position: static; 원래 기본 자리에 있어라 */

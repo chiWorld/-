@@ -1,7 +1,40 @@
 /*
-    flex-direction: row; 교차축
-    flex-direction: column; 주축
-    justify-content : 정렬방식
+    컨테이너
+    - flex-direction    주축방향 설정
+                        - row / row-reverse
+                        - column / column-reverse
+
+    - justify-content   주축방향 정렬 방식
+                        - flex-start / flex-end / center
+                        - space-between / space-around / space-evenly
+
+    - align-items       교차축방향 정렬 방식
+                        - flex-start / flex-end / center
+                        - stretch(default) : flex요소의 높이=flex컨테이너의 높이
+                        - baseline : flex컨테이너 기준선에 felx요소 배치됨
+    
+    - align-self        교차축 방향의 개별 아이템 정렬 방식 설정
+                        - flex-start / flex-end / center
+                        - stretch / baseline
+
+    - flex-wrap         줄바꿈 설정
+                        - nowrap(줄바꿈x 한줄에 모두 배치)
+                        - wrap(줄바꿈)
+                        - wrap-reverse(위쪽으로 줄바꿈)
+
+    - align-content     교차축 정렬 방식(2줄 이상)
+                        - flex-start / flex-end / center
+                        - space-between / space-around / space-evenly / stretch
+    
+    - flex-grow         플렉스 박스 내부에서 아이템이 차지하는 증가 비율 설정함
+
+    - flex-basis        아이템 초기 크기 지정함
+
+    아이템
+    - flex-basis        기본 너비 비율
+    - align-self        교차축 정렬 방식
+    - flex-grow         증가 너비 비율
+    - flex-shrink       감소 너비 비율
 */
 
 .container {
