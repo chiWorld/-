@@ -81,8 +81,32 @@ setMap();
   * 클릭한 마커로 지도 센터 이동 https://apis.map.kakao.com/web/sample/moveMap/
 */
 
-function getContent(data) {//인포윈도우 가공하기
-	return `<div>hello</div>`;
+function getContent(data) {
+	//유튜브 섬네일 id가져오기
+	let replaceUrl = data.url;
+	let finUrl = "";
+	replaceUrl = replaceUrl.replace("https://youtu.be/", "");
+	replaceUrl = replaceUrl.replace("https://www.youtube.com/embed/", "");
+	replaceUrl = replaceUrl.replace("https://www.youtube.com/watch?v=", "");
+
+	finUrl = replaceUrl.split("&")[0];
+
+	//인포윈도우 가공하기
+	return `<div class="infowindow">
+				<div class="infowindow-img-container">
+					<img
+						src="https://img.youtube.com/vi/${finUrl}/mqdefault.jpg"
+						alt="더미사진"
+						class="infowindow-img"
+					>
+				</div>
+				<div class="infowindow-body">
+					<h5 class="infowindow-title">${data.title}</h5>
+					<p class="infowindow-address">${data.address}</p>
+					<a href="${data.url}" class="infowindow-btn" target="_blank">영상이동</a>
+				</div>
+			</div>
+	`;
 }
 
 async function setMap() {
@@ -98,20 +122,35 @@ async function setMap() {
 		var infowindow = new kakao.maps.InfoWindow({
 			content: getContent(dataSet[i]), // 인포윈도우에 표시할 내용
 		});
+		
+		//인포윈도우가 생성될 때 마다 배열에 추가
+		infowindowArray.push(infowindow);
 
 		// 마커에 mouseover 이벤트와 mouseout 이벤트를 등록합니다
 		// 이벤트 리스너로는 클로저를 만들어 등록합니다 
 		// for문에서 클로저를 만들어 주지 않으면 마지막 마커에만 이벤트가 등록됩니다
-		kakao.maps.event.addListener(marker, 'mouseover', makeOverListener(map, marker, infowindow));
-		kakao.maps.event.addListener(marker, 'mouseout', makeOutListener(infowindow));
+		kakao.maps.event.addListener(marker, 'click', makeOverListener(map, marker, infowindow));
+		kakao.maps.event.addListener(map, 'click', makeOutListener(infowindow));
 	}
 }
 
 // 인포윈도우를 표시하는 클로저를 만드는 함수입니다 
-function makeOverListener(map, marker, infowindow) {
+function makeOverListener(map, marker, infowindow, coords) {
+	closeInfoWindow();
     return function() {
-        infowindow.open(map, marker);
+		infowindow.open(map, marker);
+		//클릭한 곳으로 지도 중심 옮기기
+		map.panTo(coords);
     };
+}
+
+let infowindowArray = [];
+
+//클릭시 다른 인포윈도우 닫기
+function closeInfoWindow() {
+	for (let infowindow of infowindowArray) {
+		infowindow.close();
+	}
 }
 
 // 인포윈도우를 닫는 클로저를 만드는 함수입니다 
@@ -120,3 +159,9 @@ function makeOutListener(infowindow) {
         infowindow.close();
     };
 }
+
+
+/*
+**********************************************
+5. 카테고리 분류
+*/

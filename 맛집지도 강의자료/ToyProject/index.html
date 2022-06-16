@@ -8,10 +8,11 @@
     <meta name="author" content="동네코딩" />
     <meta name="description" content="맛집지도 서비스" />
     <meta
-    name="keywords"
-    content="동네코딩, 맛집지도, 유튜버맛집, 맛집유튜버"
+        name="keywords"
+        content="동네코딩, 맛집지도, 유튜버맛집, 맛집유튜버"
     />
-    <link rel="stylesheet" href="./맛집지도.css" />
+    <link rel="stylesheet" href="./main.css" />
+    <link rel="stylesheet" href="./map.css" />
 </head>
 
 <body>
@@ -44,22 +45,11 @@
         </section>
         <div id="map" class="inner"></div>
     </main>
-
-    <div class="infowindow">
-        <div class="infowindow-img-container">
-            <img src="./dog.jpg" alt="더미사진" class="infowindow-img">
-        </div>
-        <div class="infowindow-body">
-            <h5 class="infowindow-title">할머니집</h5>
-            <p class="infowindow-address">서울특별시 어쩌구</p>
-            <a href="" class="infowindow-btn" target="_blank"></a>
-        </div>
-    </div>
-
+    
     <script 
         type="text/javascript" 
         src="//dapi.kakao.com/v2/maps/sdk.js?appkey=d38edc79c5f10a8343deb7c4f61ef6ec&libraries=services">
     </script>
-    <script src="./맛집지도.js"></script>
+    <script src="./script.js"></script>
 </body>
 </html>
