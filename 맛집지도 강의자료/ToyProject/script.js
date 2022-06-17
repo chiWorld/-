@@ -71,7 +71,7 @@ function getCoordsByAddress(address) {
 	});
 }
 
-setMap();
+setMap(dataSet);
 
 /* 
 ******************************************************************************
@@ -109,7 +109,7 @@ function getContent(data) {
 	`;
 }
 
-async function setMap() {
+async function setMap(dataSet) {
 	for (var i = 0; i < dataSet.length; i ++) {
 		//마커를 생성합니다
 		let coords = await getCoordsByAddress(dataSet[i].address);
@@ -117,6 +117,8 @@ async function setMap() {
 			map: map, //마커를 표시할 지도
 			position: coords, //마커를 표시할 위치
 		});
+
+		markerArray.push(marker);
 
 		// 마커에 표시할 인포윈도우를 생성합니다 
 		var infowindow = new kakao.maps.InfoWindow({
@@ -165,3 +167,46 @@ function makeOutListener(infowindow) {
 **********************************************
 5. 카테고리 분류
 */
+
+//카테고리
+const categoryMap = {
+	korea: "한식",
+	china: "중식",
+	japan: "일식",
+	america: "양식",
+	wheat: "분식",
+	meat: "구이",
+	suchi: "회/초밥",
+	etc: "기타",
+}
+
+const categoryList = document.querySelector(".category-list");
+categoryList.addEventListener("click", categoryHandler);
+
+function categoryHandler(event) {
+	const categoryId = event.target.id;
+	const category = categoryMap[categoryId];
+
+	//데이터 분류
+	let categorizedDataSet = [];
+	for (let data of dataSet) {
+		if (data.category === category) {
+			categorizedDataSet.push(data);
+		}
+	}
+
+	//기존 마커 삭제
+	closeMarker();
+
+	//기존 인포윈도우 닫기
+	closeInfoWindow();
+
+	setMap(categorizedDataSet);
+}
+
+let markerArray = [];
+function closeMarker() {
+	for (marker of markerArray) {
+		marker.setMap(null);
+	}
+}
