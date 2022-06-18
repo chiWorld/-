@@ -1,0 +1,26 @@
+class Solution {
+    public long solution(int price, int money, int count) {
+        long answer = 0;
+        long sumPrice = 0;
+
+        for(int i = 1; i<=count; i++) {
+            sumPrice += ((long)price) * i;
+        }
+
+        if ( sumPrice > money ) {
+            answer = sumPrice - money;
+        }
+
+        return answer;
+    }
+}
+
+
+
+
+//킹받는 다른 사람 풀이,,
+class Solution {
+    public long solution(long price, long money, long count) {
+        return Math.max(price * (count * (count + 1) / 2) - money, 0);
+    }
+}
