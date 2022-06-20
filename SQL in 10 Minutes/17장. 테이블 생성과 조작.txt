@@ -1,0 +1,95 @@
+/*
+    CREATE TABLE 생성 시 규칙
+    - CREATE TABLE 문 + 새로운 테이블 이름
+    - 테이블 이름과 정의를 콤마로 구분하여 적음
+    - 일부 DBMS에서는 테이블의 위치도 명시해야 함
+*/
+
+CREATE TABLE Products
+(
+    prod_id     CHAR(10)        NOT NULL,
+    vend_id     CHAR(10)        NOT NULL,
+    prod_name   CHAR(254)       NOT NULL,
+    prod_price  DECIMAL(8, 2)   NOT NULL,
+    prod_desc   VARCHAR(1000)   NULL
+);
+
+CREATE TABLE Orders
+(
+    order_num   INTEGER     NOT NULL, -- 주문번호
+    order_date  DATETIME    NOT NULL, -- 주문날짜
+    cust_id     CHAR(10)    NOT NULL  -- 고객ID
+);
+
+CREATE TABLE Vendors
+(
+    vend_id         CHAR(10)    NOT NULL,   -- 필수라서 NOT NULL지정
+    vend_name       CHAR(50)    NOT NULL,
+    vend_address    CHAR(50)    ,
+    vend_city       CHAR(50)    ,
+    vend_state      CHAR(5)     ,
+    vend_zip        CHAR(10)    ,
+    vend_country    CHAR(50)
+);
+
+
+-- 기본값 지정하기
+CREATE TABLE OrderItems -- 각 주문에 대한 개별 항목 저장
+(
+    order_num       INTEGER     NOT NULL,
+    order_item      INTEGER     NOT NULL,
+    prod_id         CHAR(10)    NOT NULL,
+    quantity        INTEGER     NOT NULL DERAULT 1, -- 수량이 지정되지 않으면 1이 자동으로 들어감
+    item_price      DECIMAL(8,2) NOT NULL
+);
+
+
+/*
+    시스템 날짜 가져오기
+    Db2         CUREENT_DATE
+    MySQL       CURRENT_DATE() 또는 Now()
+    Oracle      SYSDATE
+    PostgreSQL  CURRENT_DATE
+    SQL Server  GETDATE()
+    SQLite      date('now')
+*/
+
+
+/*
+    ALTER TABLE을 사용할 때 고려할 점
+    - 데이터가 있는 테이블은 변경하면 안됨
+    - 테이블에 열을 추가하는 것은 허용하나, 추가하는 열의 데이터형에 몇 가지 제약을 둔다
+    - 테이블에 있는 열을 제거/변경 하는 것을 허용하지 않음
+    - 열 이름의 변경은 허용함
+*/
+ALTER TABLE Vendors
+ADD vend_phone CHAR(20);    --vend_phone 열 추가함. 추가시 데이터형은 반드시 지정해야함
+
+ALTER TABLE Vendors
+DROP COLUMN vend_phone;
+
+
+/*
+    복잡한 테이블 구조 변경 순서
+    1. 새 테이블 생성
+    2. INSERT SELECT문 사용해서 새 테이블에 이전 테이블 데이터 복사
+    3. 새 테이블에 원하는 데이터가 있는지 확인
+    4. 이전 테이블의 이름을 변경(또는 삭제)
+    5. 새 테이블을 이전 테이블 이름으로 변경
+    6. 필요하면 트리거, 저장 프로시저, 인덱스, 외래 키 등 다시 생성
+*/
+
+
+-- 테이블 삭제하기
+DROP TABLE CustCopy;
+
+
+-- 도전 과제
+-- 1)
+ALTER TABLE Vendors
+ADD vend_web CHAR(250);
+
+-- 2)
+UPDATE Vendors
+SET vend_web = 'https://google.com/'
+WHERE vend_id = 'DLL01';
