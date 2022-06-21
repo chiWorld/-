@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1강. 셀렉터(selector)</title>
+</head>
+<body>
+    <h2 id="hello">안녕하세요</h2>
+    <h2 id="hi">올때메로나</h2>
+    <script>
+        //웹 환경에서 JavaScript의 목적 = HTML조각과 변경을 위해 사용함
+        
+        //셀렉터(selector)
+        let changeHello = document.getElementById('hello');
+        changeHello.innerHTML = '안녕';
+        changeHello.style.color = 'red';
+        changeHello.style.fontSize = '30px';
+
+        document.getElementById('hi').innerHTML = '올때바밤바';
+    </script>
+</body>
+</html>

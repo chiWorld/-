@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alert창</title>
+    <link rel="styleSheet" href="./L3Alert.css" />
+</head>
+<body>
+    <div id="alert-box" class="alert-box"></div>
+    <button onclick="btn('id')">버튼1</button>
+    <button onclick="btn('pw')">버튼2</button>
+
+    <script>
+        function btn(btnOpt) {
+            let alertBox = document.getElementById("alert-box");
+            alertBox.style.display ='block';
+            
+            if (btnOpt == 'id') {
+                alertBox.innerHTML = '아이디를 입력안하셨어요';
+            } else if (btnOpt == 'pw') {
+                alertBox.innerHTML = '비번을 입력안하셨어요';
+            }
+        }
+    </script>
+</body>
+</html>

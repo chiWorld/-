@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>이벤트리스너</title>
+    <link rel="styleSheet" href="./L3Alert.css" />
+</head>
+<body>
+    <div class="alert-box" id="alert">
+        <p id="title">Alert 박스</p>
+        <button id="close"> X </button>
+    </div>
+
+    <button id="open1">버튼1</button>
+    <button id="open2">버튼2</button>
+
+    <script>
+        let alertBox = document.getElementById('alert');
+        let title = document.getElementById('title');
+
+        document.getElementById('close').addEventListener('click', function(){
+            alertBox.style.display = 'none';
+        });
+
+        document.getElementById('open1').addEventListener('click', function(){
+            alertBox.style.display = 'block';
+            title.innerHTML = '아이디를 입력해주세요';
+        });
+
+        document.getElementById('open2').addEventListener('click', function(){
+            alertBox.style.display = 'block';
+            title.innerHTML = '비번을 입력해주세요';
+        });
+    </script>
+</body>
+</html>
