@@ -1,0 +1,98 @@
+/**
+    뷰
+        - 가상 테이블
+        - 사용될 때 동적으로 데이터를 가져오는 쿼리들을 담고 있을 뿐임
+        
+    뷰 사용 이유
+        - SQL문 재사용
+        - 복잡한 SQL작업 단순화하기
+        - 테이블의 일부만 노출하기 위해서
+        - 데이터를 보호하기 위해서
+        - 데이터 형식을 변경하기 위해서. 뷰는 원래 테이블과 다른 형식으로 데이터를 가져올 수 있음
+    
+    뷰 성능 문제
+        - 뷰를 사용할 때 마다 쿼리가 실행되기 때문에 복잡한 뷰, 여러 겹의 뷰를 생성하면 성능이 급격하게 저하됨
+*/
+SELECT cust_name
+     , cust_contact
+  FROM Customers, Orders, OrderItems
+ WHERE Customers.cust_id = Orders.cust_id
+   AND OrderItems.order_num = Orders.order_num
+   AND prod_id = 'RGAN01';
+   
+SELECT cust_name
+     , cust_contact
+  FROM ProductCustomers -- 뷰. 데이터를 가진 것이 아니라 쿼리를 가지고 있음
+ WHERE prod_id = 'RGAN01';
+ 
+
+/*
+    뷰 규칙과 제한
+        - 테이블처럼 고유한 이름 가져야함
+        - 생성 가능 한 뷰 수 제한 없음
+        - 뷰를 생성하기 위해 보안 권한 가져야함
+        - 뷰는 뷰를 포함할 수 있음
+        - 뷰 쿼리에 ORDER BY 금함
+        - 모든 열에 이름 필히 부여해야 함
+        - 인덱스 , 트리거 사용 안됨
+        - SQLite같은 일부 DBMS는 뷰를 읽기 전용 쿼리로 처리함
+        - 일부 DBMS에서 삽입, 업데이트한 데이터가 뷰의 범위를 벗어나는 경우 삽입과 업데이트를 불허하는 뷰를 만들 수 있음
+*/
+
+-- 뷰 생성 방법
+CREATE VIEW ProductCustomers AS -- 제품을 주문한 적이 있는 모든 고객 리스트 가져오는 뷰
+     SELECT cust_name
+          , cust_contact
+          , prod_id
+       FROM Customers, ORders, OrderItems
+      WHERE Customers.cust_id = Orders.cust_id
+        AND OrderItems.order_num = Orders.order_num;
+
+SELECT * FROM ProductCustomers;
+
+
+-- 가져온 데이터의 형식을 변경하기 위해 뷰 사용하기
+SELECT RTRIM(vend_name) || ' (' || RTRIM(vend_country) || ')' AS vend_title
+  FROM Vendors
+ORDER BY vend_name;
+
+CREATE VIEW VendorLocations AS
+     SELECT RTRIM(vend_name) || ' (' || RTRIM(vend_country) || ')' AS vend_title
+       FROM Vendors;
+       
+SELECT * FROM VendorLocations;
+
+
+-- 원하지 않는 데이터를 필터링하기 위해 뷰 사용하기
+CREATE VIEW CustomerEmailList AS
+     SELECT cust_id
+          , cust_name
+          , cust_email
+       FROM Customers
+      WHERE cust_email IS NOT NULL;
+
+SELECT * FROM CustomerEmailList;
+
+
+-- 계산 필드와 함께 뷰 사용하기
+SELECT prod_id
+     , quantity
+     , item_price
+     , quantity * item_price AS expanded_price
+  FROM OrderItems
+ WHERE order_num = 20008;
+ 
+CREATE VIEW OrderItemsExpanded AS
+     SELECT order_num
+          , prod_id
+          , quantity
+          , item_price
+          , quantity * item_price AS expanded_price
+       FROM OrderItems;
+
+SELECT * FROM OrderItemsExpanded
+        WHERE order_num = 20008;
+
+SELECT * FROM OrderItems;
+
+DROP VIEW OrderItemsExpanded;
