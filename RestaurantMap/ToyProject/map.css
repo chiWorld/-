@@ -8,7 +8,7 @@
 
 .infowindow-img-container {
     width: 100%;
-    overflow: hidden;
+    overflow: hidden; /* 넘치는 부분 잘려서 보이지 않음 */
 }
 
 .infowindow-img {

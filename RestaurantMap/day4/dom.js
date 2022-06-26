@@ -36,8 +36,8 @@
 
 /*
     innerText vs innerHTML = 속성값을 모두 텍스트로 인식 vs 속성값을 모두 HTML로 인식
-    ex) divTag.innerText = "<h1>안녕하세요.</h1>"; -> <h1>안녕하세요.</h1>
-    ex) divTag.innerHTML = "<h1>안녕하세요.</h1>"; -> 안녕하세요.
+    ex) divTag.innerText = "<h1>안녕하세요.</h1>"; // <h1>안녕하세요.</h1>
+    ex) divTag.innerHTML = "<h1>안녕하세요.</h1>"; // 안녕하세요.
 */
 
 
@@ -99,7 +99,7 @@ let result = "";
 
 for (data of productsData) {
     result +=
-        `<div class="item">상품명: ${productsData.title}, 
+        `<div class="item">상품명: ${productsData.title},
         무게 ${productsData.weight}g</div>`;
 }
 
