@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- asyn default = true / 
+        브라우저가 HTML parsing하다가 얘를 만나면 다운로드 하고 있다가 
+        js 다 받으면 다시 parsing함
+        장점 : body 끝보다 fetching이 병렬적으로 일어남
+        단점 : DOM요소 조작시 원하는 요소가 아직 정의되지 않을 수 있음
+                js 로드시 block되어 사용자가 페이지를 보는데 여전히 시간이 걸림
+    -->
+    <!-- <script asyn src="main.js"></script> -->
+
+    <!--
+        head + defer
+        HTML을 모두 parsing하면서 필요한 js를 다 fetching해 놓고 순서대로 executing(실행)함
+    -->
+    <script defer src="main.js"></script>
+</head>
+<body>
+    
+    <!-- 여기서 멈춰서 js 다운받고 나서 다시 parsing(분석)함 -->
+    <!-- 기본 HTML을 유저가 빨리 볼 수 있으나, fetching js, executing js 시간을 기다려야함-->
+    <!-- <script src="main.js"></script>  -->
+</body>
+</html>
