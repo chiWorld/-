@@ -7,7 +7,7 @@
 
 
 /**
- * 2. Variable
+ * 2. Variable, rw(read/write memory)
  * let (added in ES6) - Mutable (변경 가능한 값)
  */
 
@@ -35,15 +35,24 @@ console.log(age); //블럭스콥 무시하고 그냥 출력됨
 
 
 /**
- * 3. Constans
- *  favor immutable data type always for a few reasons;
- *      - security : 해킹들이 값을 변경할 수 없음
- *      - thread safety : 프로세스 안에 많은 스레드가 동시에 변수에 접근해서 값을 변경하는 것을 방지
- *      - reduce human mistakes
+ * 3. Constans, r(read only)
+ *  use const whenever possible.
+ *  only use let if variable needs to change.
  */
 const daysInWeek = 7;
 const maxNumber = 5;
 
+/**
+ * Note!
+ * Immutable data types : premitive types, frozen objects (i.e. object.freeze())
+ * 
+ * Mutable data types   : all 'objects' by default are mutable in JS
+ * 
+ * favor immutable data type always for a few reasons;
+ * - security : 해킹들이 값을 변경할 수 없음
+ * - thread safety : 프로세스 안에 많은 스레드가 동시에 변수에 접근해서 값을 변경하는 것을 방지
+ * - reduce human mistakes
+ */
 
 /**
  * 4. Variable types
@@ -106,7 +115,7 @@ console.log(`value: ${symbol1.description}, type: ${typeof symbol1.description}`
 
 //object, real-life object, data structure
 const ellie = { name: 'ellie', age: 20 };
-console.log(`나의 이름은 ${ellie.name}입니다.);
+console.log(`나의 이름은 ${ellie.name}입니다.`);
 
 
 /**
