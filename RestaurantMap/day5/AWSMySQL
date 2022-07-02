@@ -96,6 +96,18 @@ AWS서버 - WinSCP 연결방법
     20. node -v npm -v 버전 확인하기
 
 
-
-
+******************************************************************
+MySQL 서버에 설정하는 법
+    - 서버 터미널에 apt-get install mysql-server or apt-get install mysql-server -y
+    - mySQL 접근법 : mysql -u root -p 엔터
+    - mysql 5.7 비밀번호 설정 (joonyon.tistory.com/91)
+    - mysql 외부접속 (zetawiki.com/wiki/MySQL_원격_접속_허용)
+    - 권한변경 저장 : flush privileges;
+    - LISTEN IP대역 변경 : vi /etc/mysql/로 이동
+        - 패키지 관리자로 설치한 mysql설정파일 경로 : vi /etc/mysql/mysql.conf.d/mysqld.cnf
+        - i 누르기 > 주석처리 #bind-address > ESC키 :wq! 저장하고 나가기
+    - mysql외부접속 - 데이터베이스 클라이언트 프로그램이 필요함 > mysql workbench 다운로드
+    - mySQL 접속을 위한 AWS 인스턴스 port 설정법
+        - AWS 인바운드규칙 편집 > 규칙추가 > mySQL/Aurora  /  Anywhere IPv4  > 규칙저장
+    - mySQL connection Hostname: AWS인스턴스 / root / pw 입력하고 connection 연결
 
