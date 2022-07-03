@@ -13,12 +13,14 @@
 
 /* div는 기본적으로 block이다. */
 div {
+    border: 1px solid black;
     width: 100px;
     display: inline-block;
 }
 
 /* 인라인은 박스모델이라는게 적용되지 않음 */
 span {
+    border: 1px solid red;
     width: 100px;
-    display: block;
+    display: inline;
 }

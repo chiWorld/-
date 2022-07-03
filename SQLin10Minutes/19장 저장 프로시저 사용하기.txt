@@ -1,0 +1,99 @@
+/*
+    프로시저 사용 이유
+        - 장점 : 단순성, 보안성, 성능을 높일 수 있음
+                - 여러 단계로 이루어진 과정을 사용하기 쉬운 하나의 단위로 캡슐화하여 복잡한 작업을 단순화함
+                - 변경 관리를 단순화함
+                - 데이터 일관성을 보장함 - 여러 단계를 반복해서 만들 필요가 없기 때문에
+                                         - 오류 방지에도 도움을
+                - 보안성 높임 - 기본 데이터에 대한 접근을 제한할 수 있는점이 데이터 손상 가능성을 줄여듬
+                - 저장 프로시저는 컴파일된 형태로 저장되어 DBMS가 하는 일 줄어듬 > 결과 성능 향상됨
+        
+        - 단점 : DBMS끼리 호환 안됨, 사용이 어려움
+                - 타 DBMS의 프로시저 문법끼리 호환하기 어려움. 단 다른 DBMS로 바꿔야 하는 경우 클라이언트 프로그램 코드는 변경하지 않을 수도 있음
+                - 저장 프로시저 작성 시 고수준의 기술과 경험이 필요함
+*/
+
+/*
+    저장프로시저 실행하는 SQL문 - EXECUTE
+        - 저장 프로시저의 이름과 전달할 필요가 있는 매개변수 가짐
+*/
+-- Products테이블에 새로운 행을 하나 추가하고 적절한 열에 매개변수 전달함.
+EXECUTE AddNewProduct('JTS01',                  --판매처ID
+                      'Stuffed Eiffel Tower',   --제품명
+                      6.49,                     --가격
+                      'Plush stuffed toy with the text La Tour Eiffel in red white and blue'); --설명
+                     
+-- AddNewProduct 프로시저가 하는 것
+-- 1) 네 개의 매개변수 모두에 값이 있는지 확인하고 데이터 전달
+-- 2) 기본 키로 사용하는 고유ID생성
+-- 3) Products테이블에 새로운 행 추가하고, 생성한 기본 키와 전달한 데이터를 적절한 열에 삽입
+-- 이 외에 DBMS에 따라 실행 옵션을 추가로 사용할 수 있음
+
+
+-- 저장프로시저 생성하기
+-- IN : 저장 프로시저로 값을 전달하기 위해 사용
+-- OUT : 저장 프로시저에서 값을 반환하기 위해 사용
+-- INOUT : 두 용도 모두 쓰임
+
+-- Oracle ver
+CREATE PROCEDURE MailingListCount (
+    ListCount OUT INTEGER           --매개변수 : 저장 프로시저로 값을 전달하는게 아닌 결과값을 가져오는데 쓰임
+)
+IS
+v_rows INTEGER;
+BEGIN
+    SELECT COUNT(*) INTO v_rows
+    FROM Customers
+    WHERE NOT cust_email IS NULL;
+    ListCount := v_rows;
+END;
+
+
+-- 위 예제 호출
+var ReturnValue NUMBER              -- 저장 프로시저가 반환하는 값을 저장하기 위해 먼저 변수 선언
+EXEC MailingListCount(:ReturnValue);
+SELECT ReturnValue;                 -- 가져온 값 출력
+
+
+-- Microsoft SQL Server
+-- @ : SQL Server에서 사용되는 모든 지역 변수는 @로 시작함
+CREATE PROCEDURE MailingListCount
+AS
+DECLARE @cnt INTEGER
+SELECT @cnt= COUNT(*)
+FROM Customers
+WHERE NOT cust_email IS NULLl
+RETURN @cnt;
+
+-- 위 예제 호출
+DECLARE @ReturnValue INT
+EXECUTE @ReturnValue=MailingListCount;
+SELECT @ReturnValue;
+
+
+-- Orders테이블에 새로운 주문을 넣는 저장 프로시저. SQL Server버전
+CREATE PROCEDURE NewOrder @cust_id CHAR(10) --주문하는 고객의 ID만 매개변수로 받음
+AS
+--주문 번호를 저장하기 위한 지역변수 선언
+DECLARE @order_num INTEGER
+--현재 Orders 테이블에서 가장 큰 주문 번호 획득
+SELECT @order_num=MAX(order_num)
+FROM Orders
+--다음 주문 번호 생성
+SELECT @order_num=@order_num+1
+--새 주문 데이터 삽입
+INSERT INTO Orders(order_num, order_date, cust_id)
+VALUES(@order_num, GETDATE(), @cust_id)
+--주문 번호 반환
+RETURN @order_num;
+
+
+-- Orders테이블에 새로운 주문 항목을 삽입하는데 DBMS가 직접 주문번호를 생성함
+-- 아이덴티티 필드 : 자동으로 증가하는 열을 뜻함 = 자동 번호 = 시퀀스
+CREATE PROCEDURE NewOrder @cust_id CHAR(10)
+AS
+--새로운 주문 데이터 삽입
+INSERT INTO Orders(cust_id)
+VALUES(@cust_id)
+--주문 번호 반환
+SELECT order_num = @@IDENTITY; --전역변수. ID를 알 수 있게 함
