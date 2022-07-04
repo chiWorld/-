@@ -199,9 +199,8 @@ function calculate(command, a, b) {
         case "remainder" :
             result = a % b;
             break;
-        default :
-            result = "Boom!";
-            break;
+        default:
+            throw Error('Boom!!');
     }
     return result;
 }
